@@ -1,0 +1,22 @@
+{
+    "status": "OK",
+    "result": {
+        "warehouses": [
+            {
+                "id": 0,
+                "name": "string",
+                "address": {
+                    "city": "string",
+                    "street": "string",
+                    "number": "string",
+                    "building": "string",
+                    "block": "string",
+                    "gps": {
+                        "latitude": 0,
+                        "longitude": 0
+                    }
+                }
+            }
+        ]
+    }
+}

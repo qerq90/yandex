@@ -1,0 +1,30 @@
+{
+    "status": "OK",
+    "result": {
+        "paging": {
+            "nextPageToken": "string",
+            "prevPageToken": "string"
+        },
+        "warehouses": [
+            {
+                "warehouseId": 0,
+                "offers": [
+                    {
+                        "offerId": "string",
+                        "turnoverSummary": {
+                            "turnover": "LOW",
+                            "turnoverDays": 0
+                        },
+                        "stocks": [
+                            {
+                                "type": "FIT",
+                                "count": 0
+                            }
+                        ],
+                        "updatedAt": "2022-12-29T18:02:01Z"
+                    }
+                ]
+            }
+        ]
+    }
+}

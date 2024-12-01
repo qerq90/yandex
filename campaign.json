@@ -1,0 +1,14 @@
+{
+    "campaigns": [
+        {
+            "domain": "Сантехсерв",
+            "id": 56473059,
+            "clientId": 103596146,
+            "business": {
+                "id": 58195411,
+                "name": "Сантехсерв"
+            },
+            "placementType": "FBY"
+        }
+    ]
+}
