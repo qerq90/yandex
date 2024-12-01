@@ -67,7 +67,7 @@ func (c *YandexMarketClient) GetOrders() []product.OfferProducts {
 }
 
 func (c *YandexMarketClient) getOrders() []order.Order {
-	resp, err := c.makeRequestWithAuth(http.MethodGet, "https://api.partner.market.yandex.ru/campaigns/"+c.campaignId+"/orders?fromDate="+time.Now().AddDate(0, 0, -1).Format(YANDEX_FORMAT)+"&toDate="+time.Now().Format(YANDEX_FORMAT), nil)
+	resp, err := c.makeRequestWithAuth(http.MethodGet, "https://api.partner.market.yandex.ru/campaigns/"+c.campaignId+"/orders?fromDate="+time.Now().Format(YANDEX_FORMAT)+"&toDate="+time.Now().Format(YANDEX_FORMAT), nil)
 	if err != nil {
 		log.Fatal(err)
 	}

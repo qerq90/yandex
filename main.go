@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"qerq90/yandex/logic/client"
 	"qerq90/yandex/logic/service"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -60,8 +62,10 @@ func main() {
 
 	ncService := service.MakeNcService(yandexClient, vkClient)
 
-	ncService.SendNotificationsFromYandexMarket()
-	ncService.SendNotificationsFromYandexMarket()
-	ncService.SendNotificationsFromYandexMarket()
+	for {
+		ncService.SendNotificationsFromYandexMarket()
+		fmt.Println("Sleeping for 5 minutes")
+		time.Sleep(time.Minute * 5)
+	}
 
 }

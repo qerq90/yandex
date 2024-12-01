@@ -25,8 +25,9 @@ func (nc *NotificationService) SendNotificationsFromYandexMarket() {
 	message := ""
 	for _, order := range orders {
 		if slices.Index(alreadyProcessed, order.Id) == -1 {
+			message += "New Order №" + order.Id + "\n"
 			for _, item := range order.Products {
-				message += fmt.Sprintf("ID - %s\n %s \n\n", item.Id, item.Name)
+				message += fmt.Sprintf("%s \n\n", item.Name)
 			}
 
 			alreadyProcessed = append(alreadyProcessed, order.Id)
