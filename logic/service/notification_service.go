@@ -19,14 +19,15 @@ func MakeNcService(yandexClient *client.YandexMarketClient, vkClient *client.VkC
 	return &NotificationService{yandexClient: yandexClient, vkClient: vkClient}
 }
 
-func (nc *NotificationService) SendNotificationsFromYandexMarket() {
+func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
 	orders := nc.yandexClient.GetOrders()
 
 	message := ""
 	for _, order := range orders {
 		if slices.Index(alreadyProcessed, order.Id) == -1 {
-			message += "New Order №" + order.Id + "\n"
+			message += "Order №" + order.Id + "\n"
 			for _, item := range order.Products {
+				message += fmt.Sprintf("Status[%s]\n", item.Status)
 				message += fmt.Sprintf("%s \n\n", item.Name)
 			}
 
@@ -34,5 +35,8 @@ func (nc *NotificationService) SendNotificationsFromYandexMarket() {
 		}
 	}
 
-	nc.vkClient.SendMessage(message, 51422811, nil)
+	err := nc.vkClient.SendMessage(message, vkId, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

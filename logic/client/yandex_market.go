@@ -55,8 +55,10 @@ func (c *YandexMarketClient) GetOrders() []product.OfferProducts {
 		offerProducts := []product.Product{}
 
 		for _, item := range order.Items {
-			offerProduct := product.Product{Id: item.OfferID, Name: item.OfferName, Img: "blablabla"}
-			offerProducts = append(offerProducts, offerProduct)
+			for i := 0; i < item.Count; i++ {
+				offerProduct := product.Product{Id: item.OfferID, Name: item.OfferName, Img: "blablabla", Status: order.Status}
+				offerProducts = append(offerProducts, offerProduct)
+			}
 		}
 
 		newOfferProducts.Products = offerProducts

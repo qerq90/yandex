@@ -6,7 +6,8 @@ type OfferProducts struct {
 }
 
 type Product struct {
-	Id   string
-	Name string
-	Img  string
+	Id     string
+	Name   string
+	Img    string
+	Status string
 }

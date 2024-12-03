@@ -63,7 +63,7 @@ func main() {
 	ncService := service.MakeNcService(yandexClient, vkClient)
 
 	for {
-		ncService.SendNotificationsFromYandexMarket()
+		ncService.SendNotificationsFromYandexMarket(51422811)
 		fmt.Println("Sleeping for 5 minutes")
 		time.Sleep(time.Minute * 5)
 	}
