@@ -25,9 +25,11 @@ func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
 	message := ""
 	for _, order := range orders {
 		if slices.Index(alreadyProcessed, order.Id) == -1 {
-			message += "Order №" + order.Id + "\n"
+			message += "Заказ №" + order.Id
+			message += fmt.Sprintf(" [%s]\n", getStatus(order.Products[0].Status))
+			message += "Товары:\n"
+
 			for _, item := range order.Products {
-				message += fmt.Sprintf("Status[%s]\n", item.Status)
 				message += fmt.Sprintf("%s \n\n", item.Name)
 			}
 
@@ -38,5 +40,13 @@ func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
 	err := nc.vkClient.SendMessage(message, vkId, nil)
 	if err != nil {
 		fmt.Println(err)
+	}
+}
+
+func getStatus(status string) string {
+	if status == "CANCELLED" {
+		return "Отмена"
+	} else {
+		return "Создание"
 	}
 }

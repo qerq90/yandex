@@ -49,6 +49,14 @@ func init() {
 // 	io.Writer.Write(w, result)
 // }
 
+func sendNotifications(nc service.NotificationService) {
+	for {
+		nc.SendNotificationsFromYandexMarket(51422811)
+		fmt.Println("Sleeping for 5 minutes")
+		time.Sleep(time.Minute * 5)
+	}
+}
+
 func main() {
 	yandexClient, err := client.MakeYandexMarketClient()
 	if err != nil {
@@ -62,10 +70,8 @@ func main() {
 
 	ncService := service.MakeNcService(yandexClient, vkClient)
 
-	for {
-		ncService.SendNotificationsFromYandexMarket(51422811)
-		fmt.Println("Sleeping for 5 minutes")
-		time.Sleep(time.Minute * 5)
-	}
+	go sendNotifications(*ncService)
+
+	select {}
 
 }
