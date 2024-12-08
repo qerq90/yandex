@@ -1,5 +1,5 @@
 package sender
 
 type Sender interface {
-	send(id int, message string)
+	Send(id int, message string)
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"qerq90/yandex/logic/client"
+	"qerq90/yandex/logic/service/sender"
 	"slices"
 )
 
@@ -12,11 +13,11 @@ var (
 
 type NotificationService struct {
 	yandexClient *client.YandexMarketClient
-	vkClient     *client.VkClient
+	sender       sender.Sender
 }
 
-func MakeNcService(yandexClient *client.YandexMarketClient, vkClient *client.VkClient) *NotificationService {
-	return &NotificationService{yandexClient: yandexClient, vkClient: vkClient}
+func MakeNcService(yandexClient *client.YandexMarketClient, sender sender.Sender) *NotificationService {
+	return &NotificationService{yandexClient: yandexClient, sender: sender}
 }
 
 func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
@@ -37,10 +38,7 @@ func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
 		}
 	}
 
-	err := nc.vkClient.SendMessage(message, vkId, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
+	nc.sender.Send(vkId, message)
 }
 
 func getStatus(status string) string {

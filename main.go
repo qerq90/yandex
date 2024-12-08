@@ -5,6 +5,7 @@ import (
 	"log"
 	"qerq90/yandex/logic/client"
 	"qerq90/yandex/logic/service"
+	"qerq90/yandex/logic/service/sender"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -35,7 +36,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ncService := service.MakeNcService(yandexClient, vkClient)
+	vkSender := sender.MakeVkSender(vkClient, nil)
+	ncService := service.MakeNcService(yandexClient, vkSender)
 
 	go sendNotifications(*ncService)
 

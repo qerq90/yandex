@@ -14,7 +14,7 @@ func MakeTelegramSender(dao *db.Dao, telegram *client.TelegramClient) *TelegramS
 	return &TelegramSender{telegram, dao}
 }
 
-func (sender *TelegramSender) send(id int, message string) {
+func (sender *TelegramSender) Send(id int, message string) {
 	telegramId := sender.dao.GetTelegramId(id)
 	sender.telegramClient.SendMessage(telegramId, message)
 }
