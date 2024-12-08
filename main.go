@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"qerq90/yandex/logic/client"
+	"qerq90/yandex/logic/db"
 	"qerq90/yandex/logic/service"
 	"qerq90/yandex/logic/service/sender"
 	"time"
@@ -19,7 +20,7 @@ func init() {
 
 func sendNotifications(nc service.NotificationService) {
 	for {
-		nc.SendNotificationsFromYandexMarket(51422811)
+		nc.SendNotificationsFromYandexMarket(1)
 		fmt.Println("Sleeping for 5 minutes")
 		time.Sleep(time.Minute * 5)
 	}
@@ -36,7 +37,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	vkSender := sender.MakeVkSender(vkClient, nil)
+	dao, err := db.CreateDao()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	vkSender := sender.MakeVkSender(vkClient, dao)
 	ncService := service.MakeNcService(yandexClient, vkSender)
 
 	go sendNotifications(*ncService)

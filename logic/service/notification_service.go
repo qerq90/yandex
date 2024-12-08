@@ -20,7 +20,7 @@ func MakeNcService(yandexClient *client.YandexMarketClient, sender sender.Sender
 	return &NotificationService{yandexClient: yandexClient, sender: sender}
 }
 
-func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
+func (nc *NotificationService) SendNotificationsFromYandexMarket(userId int) {
 	orders := nc.yandexClient.GetOrders()
 
 	message := ""
@@ -38,7 +38,7 @@ func (nc *NotificationService) SendNotificationsFromYandexMarket(vkId int) {
 		}
 	}
 
-	nc.sender.Send(vkId, message)
+	nc.sender.Send(userId, message)
 }
 
 func getStatus(status string) string {

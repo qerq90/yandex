@@ -15,6 +15,6 @@ func MakeVkSender(vk *client.VkClient, dao *db.Dao) *VkSender {
 }
 
 func (sender *VkSender) Send(id int, message string) {
-	// vkId := sender.dao.GetVkId(id) //TODO use dao
-	sender.vkClient.SendMessage(message, id, nil)
+	vkId := sender.dao.GetVkId(id)
+	sender.vkClient.SendMessage(message, vkId, nil)
 }
