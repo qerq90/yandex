@@ -6,3 +6,6 @@
 5) Возможно создать полноценную команду для того, чтобы выдавать аналитику по продажам за день
 6) Реализовать весь тот же функционал для телеграмма
 7) В связи с пунктом 6 - подумать о больше модульности проекта
+
+Migration: 
+goose -dir migration postgres "host=localhost user=notification_user password={from_env} dbname=notification_bot sslmode=disable" up

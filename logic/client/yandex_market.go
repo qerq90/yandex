@@ -176,14 +176,10 @@ func (c *YandexMarketClient) GetWarehouses() []offer.Warehouse {
 
 	offerMappings := response.Result.OfferMappings
 	offerIds := make([]string, 0)
-	offerMapping := make(map[offerID]offerName)
 
 	for i := 0; i < len(offerMappings); i++ {
 		offerId := offerMappings[i].Offer.OfferId
-		offerName := offerMappings[i].Offer.Name
-
 		offerIds = append(offerIds, offerId)
-		offerMapping[offerId] = offerName
 	}
 
 	stockRequestBody := stock.StockRequest{WithTurnover: true, OfferIds: offerIds}
