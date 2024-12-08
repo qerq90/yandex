@@ -8,4 +8,7 @@
 7) В связи с пунктом 6 - подумать о больше модульности проекта
 
 Migration: 
-goose -dir migration postgres "host=localhost user=notification_user password={from_env} dbname=notification_bot sslmode=disable" up
+
+create: ```goose create name_of_migration sql```
+
+apply_migration: ```goose -dir migration postgres "host=localhost user=notification_user password={from_env} dbname=notification_bot sslmode=disable" up```
