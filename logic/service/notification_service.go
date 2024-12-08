@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	alreadyProcessed []string
+	alreadyProcessed []string //TODO change to db(maybe something like redis)
 )
 
 type NotificationService struct {
