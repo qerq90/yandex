@@ -71,18 +71,18 @@ func (c *YandexMarketClient) GetOrders() []product.OfferProducts {
 func (c *YandexMarketClient) getOrders() []order.Order {
 	resp, err := c.makeRequestWithAuth(http.MethodGet, "https://api.partner.market.yandex.ru/campaigns/"+c.campaignId+"/orders?fromDate="+time.Now().Format(YANDEX_FORMAT)+"&toDate="+time.Now().Format(YANDEX_FORMAT), nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	var ordersResponse = order.Root{}
 	err = json.Unmarshal(data, &ordersResponse)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	return ordersResponse.Orders
@@ -107,18 +107,18 @@ func (c *YandexMarketClient) makeRequestWithAuth(method string, url string, body
 func (c *YandexMarketClient) GetWarehouseMapping() map[warehouseId]warehouseName {
 	resp, err := c.makeRequestWithAuth(http.MethodGet, "https://api.partner.market.yandex.ru/warehouses", nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	warehouseAnswer := warehouse.WarehouseAnswer{}
 	err = json.Unmarshal(data, &warehouseAnswer)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	warehouseMapping := make(map[warehouseId]warehouseName)
@@ -135,16 +135,19 @@ func (c *YandexMarketClient) GetOfferMapping() map[offerID]offerName {
 	resp, err := c.makeRequestWithAuth(http.MethodPost, "https://api.partner.market.yandex.ru/businesses/58195411/offer-mappings", nil)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	response := offermappings.OfferMappingsResult{}
-	json.Unmarshal(data, &response)
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		log.Default().Println(err)
+	}
 
 	offerMappings := response.Result.OfferMappings
 	offerMapping := make(map[offerID]offerName)
@@ -163,16 +166,19 @@ func (c *YandexMarketClient) GetWarehouses() []offer.Warehouse {
 	resp, err := c.makeRequestWithAuth(http.MethodPost, "https://api.partner.market.yandex.ru/businesses/58195411/offer-mappings", nil)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	response := offermappings.OfferMappingsResult{}
-	json.Unmarshal(data, &response)
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		log.Default().Println(err)
+	}
 
 	offerMappings := response.Result.OfferMappings
 	offerIds := make([]string, 0)
@@ -185,24 +191,25 @@ func (c *YandexMarketClient) GetWarehouses() []offer.Warehouse {
 	stockRequestBody := stock.StockRequest{WithTurnover: true, OfferIds: offerIds}
 	marshalled, err := json.Marshal(stockRequestBody)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
+
 	jsonBody := io.NopCloser(strings.NewReader(string(marshalled)))
 
 	resp, err = c.makeRequestWithAuth(http.MethodPost, "https://api.partner.market.yandex.ru/campaigns/"+c.campaignId+"/offers/stocks", jsonBody)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	data, err = io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	res := offer.WarehouseStocks{}
 	err = json.Unmarshal(data, &res)
 	if err != nil {
-		log.Fatal(err)
+		log.Default().Println(err)
 	}
 
 	return res.Result.Warehouses
