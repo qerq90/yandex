@@ -37,15 +37,23 @@ func main() {
 		log.Fatal(err)
 	}
 
+	telegramClient, err := client.MakeTelegramClient()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	dao, err := db.CreateDao()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	vkSender := sender.MakeVkSender(vkClient, dao)
-	ncService := service.MakeNcService(yandexClient, vkSender)
+	telegramSender := sender.MakeTelegramSender(telegramClient, dao)
+	ncServiceVk := service.MakeNcService(yandexClient, vkSender)
+	ncServiceTelegram := service.MakeNcService(yandexClient, telegramSender)
 
-	go sendNotifications(*ncService)
+	go sendNotifications(*ncServiceVk)
+	go sendNotifications(*ncServiceTelegram)
 
 	select {}
 

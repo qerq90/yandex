@@ -10,7 +10,7 @@ type TelegramSender struct {
 	dao            *db.Dao
 }
 
-func MakeTelegramSender(dao *db.Dao, telegram *client.TelegramClient) *TelegramSender {
+func MakeTelegramSender(telegram *client.TelegramClient, dao *db.Dao) *TelegramSender {
 	return &TelegramSender{telegram, dao}
 }
 
