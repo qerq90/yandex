@@ -33,7 +33,7 @@ func sendNotifications(nc service.NotificationService) {
 func makeTelegramApi() (*tgbotapi.BotAPI, error) {
 	telegramToken, exists := os.LookupEnv("TELEGRAM_TOKEN")
 	if !exists {
-		return nil, errors.New("no DB_NAME found in .env file")
+		return nil, errors.New("no TELEGRAM_TOKEN found in .env file")
 	}
 
 	api, err := tgbotapi.NewBotAPI(telegramToken)
