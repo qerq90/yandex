@@ -1,14 +1,18 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"os"
 	"qerq90/yandex/logic/client"
 	"qerq90/yandex/logic/db"
 	"qerq90/yandex/logic/service"
+	"qerq90/yandex/logic/service/bot"
 	"qerq90/yandex/logic/service/sender"
 	"time"
 
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
 )
 
@@ -26,6 +30,20 @@ func sendNotifications(nc service.NotificationService) {
 	}
 }
 
+func makeTelegramApi() (*tgbotapi.BotAPI, error) {
+	telegramToken, exists := os.LookupEnv("TELEGRAM_TOKEN")
+	if !exists {
+		return nil, errors.New("no DB_NAME found in .env file")
+	}
+
+	api, err := tgbotapi.NewBotAPI(telegramToken)
+	if err != nil {
+		return nil, err
+	}
+
+	return api, nil
+}
+
 func main() {
 	yandexClient, err := client.MakeYandexMarketClient()
 	if err != nil {
@@ -37,10 +55,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	telegramClient, err := client.MakeTelegramClient()
+	telegramApi, err := makeTelegramApi()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	telegramClient := client.MakeTelegramClient(telegramApi)
 
 	dao, err := db.CreateDao()
 	if err != nil {
@@ -52,8 +72,11 @@ func main() {
 	ncServiceVk := service.MakeNcService(yandexClient, vkSender)
 	ncServiceTelegram := service.MakeNcService(yandexClient, telegramSender)
 
+	telegramBot := bot.MakeTelegramBot(telegramApi, dao)
+
 	go sendNotifications(*ncServiceVk)
 	go sendNotifications(*ncServiceTelegram)
+	go telegramBot.Run()
 
 	select {}
 

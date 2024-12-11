@@ -59,8 +59,8 @@ func CreateDao() (*Dao, error) {
 	return &Dao{transactor: db}, nil
 }
 
-func (dao *Dao) GetVkId(id int) int {
-	statement := fmt.Sprintf(`select vk_id from users where id = %d`, id)
+func (dao *Dao) GetVkId(userId int) int {
+	statement := fmt.Sprintf(`select vk_id from users where id = %d`, userId)
 
 	var vkId int
 	dao.transactor.QueryRow(statement).Scan(&vkId)
@@ -68,11 +68,35 @@ func (dao *Dao) GetVkId(id int) int {
 	return vkId
 }
 
-func (dao *Dao) GetTelegramId(id int) int {
-	statement := fmt.Sprintf(`select telegram_id from users where id = %d`, id)
+func (dao *Dao) GetTelegramId(userId int) int {
+	statement := fmt.Sprintf(`select telegram_id from users where id = %d`, userId)
 
 	var telegramId int
 	dao.transactor.QueryRow(statement).Scan(&telegramId)
 
 	return telegramId
+}
+
+func (dao *Dao) GetByTelegramId(telegramId int) (int, error) {
+	statement := fmt.Sprintf(`select id from users where telegram_id = %d`, telegramId)
+
+	var id int
+	err := dao.transactor.QueryRow(statement).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func (dao *Dao) InsertNewTelegramUser(telegramId int) error {
+	statement := fmt.Sprintf(`insert into users (telegram_id) values (%d)`, telegramId)
+
+	_, err := dao.transactor.Exec(statement)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
