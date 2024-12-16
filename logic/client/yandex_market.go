@@ -28,6 +28,12 @@ type warehouseName = string
 type offerID = string
 type offerName = string
 
+type DeliveryInfo struct {
+	OrderId     int
+	RegionId    int
+	WarehouseId string
+}
+
 const (
 	YANDEX_FORMAT = "02-01-2006"
 )
@@ -49,6 +55,11 @@ func (c *YandexMarketClient) GetOrders() []product.OfferProducts {
 	orders := c.getOrders()
 
 	offers := []product.OfferProducts{}
+	var deliveryRequestInfo []DeliveryInfo
+	for _, order := range orders {
+		deliveryInfo := DeliveryInfo{order.ID, order.Delivery.Region.ID, order.Items[0].PartnerWarehouseID}
+		deliveryRequestInfo = append(deliveryRequestInfo, deliveryInfo)
+	}
 
 	for _, order := range orders {
 		newOfferProducts := product.OfferProducts{Id: strconv.Itoa(order.ID)}
@@ -68,8 +79,35 @@ func (c *YandexMarketClient) GetOrders() []product.OfferProducts {
 	return offers
 }
 
+func (c *YandexMarketClient) getDetailedOrders() {
+	offerParams := offer.Params{UpdateFrom: time.Now().Format(YANDEX_FORMAT), UpdateTo: time.Now().Format(YANDEX_FORMAT)}
+	marshalled, err := json.Marshal(offerParams)
+	if err != nil {
+		log.Default().Println(err)
+	}
+
+	jsonBody := io.NopCloser(strings.NewReader(string(marshalled)))
+
+	resp, err := c.makeRequestWithAuth(http.MethodPost, "https://api.partner.market.yandex.ru/campaigns/"+c.campaignId+"/stats/orders", jsonBody)
+	if err != nil {
+		log.Default().Println(err)
+	}
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Default().Println(err)
+	}
+
+	var ordersResponse = order.Root{}
+	err = json.Unmarshal(data, &ordersResponse)
+	if err != nil {
+		log.Default().Println(err)
+	}
+}
+
 func (c *YandexMarketClient) getOrders() []order.Order {
 	resp, err := c.makeRequestWithAuth(http.MethodGet, "https://api.partner.market.yandex.ru/campaigns/"+c.campaignId+"/orders?fromDate="+time.Now().Format(YANDEX_FORMAT)+"&toDate="+time.Now().Format(YANDEX_FORMAT), nil)
+
 	if err != nil {
 		log.Default().Println(err)
 	}

@@ -50,10 +50,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	vkClient, err := client.MakeVkClient()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// vkClient, err := client.MakeVkClient()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	telegramApi, err := makeTelegramApi()
 	if err != nil {
@@ -62,19 +62,19 @@ func main() {
 
 	telegramClient := client.MakeTelegramClient(telegramApi)
 
-	dao, err := db.CreateDao()
+	dao, err := db.MakeDao()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	vkSender := sender.MakeVkSender(vkClient, dao)
+	// vkSender := sender.MakeVkSender(vkClient, dao)
 	telegramSender := sender.MakeTelegramSender(telegramClient, dao)
-	ncServiceVk := service.MakeNcService(yandexClient, vkSender)
+	// ncServiceVk := service.MakeNcService(yandexClient, vkSender)
 	ncServiceTelegram := service.MakeNcService(yandexClient, telegramSender)
 
 	telegramBot := bot.MakeTelegramBot(telegramApi, dao)
 
-	go sendNotifications(*ncServiceVk)
+	// go sendNotifications(*ncServiceVk)
 	go sendNotifications(*ncServiceTelegram)
 	go telegramBot.Run()
 

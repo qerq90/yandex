@@ -20,7 +20,7 @@ func checkError(err error) {
 	}
 }
 
-func CreateDao() (*Dao, error) {
+func MakeDao() (*Dao, error) {
 	dbname, exists := os.LookupEnv("DB_NAME")
 	if !exists {
 		return nil, errors.New("no DB_NAME found in .env file")
